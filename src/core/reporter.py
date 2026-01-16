@@ -25,7 +25,7 @@ def generate_report(total_days, totals_act, P, route, action, state):
 
     # Find weakest day
     weak_day = total_days.index(min(total_days)) + 1
-    report += f"Day with less study: DAy {weak_day}\n"
+    report += f"Day with less study: Day {weak_day}\n"
 
     # Find dominant activity
     dominant_activity = activities[totals_act.index(max(totals_act))]
