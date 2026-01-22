@@ -1,0 +1,63 @@
+import customtkinter as ctk
+from PIL import Image, ImageTk
+import tkinter as tk
+
+class MainWindow(ctk.CTk, tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Academic Path Recommender")
+        self.geometry("500x450")
+        self.config(bg="#a9c2c9")
+        self.resizable(False, False)
+        self.create_widgets()
+        
+    def create_widgets(self):
+        title = ctk.CTkLabel(
+            self, text="Welcome to the Academic Path Recommender", 
+            bg_color="#a9c2c9", fg_color="#c5f7f0", text_color="#562155",
+            corner_radius=60, font=("Arial", 20, "bold"))
+        title.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
+        
+        try:
+            icon_menu_original = Image.open("docs/images/img_icon_menu.png")
+            icon_menu = ctk.CTkImage(light_image=icon_menu_original, size=(100, 100))
+        except Exception as e:
+            print(f"Error to loading the image: {e}")
+            icon_menu = None
+            
+        if icon_menu:
+            icon = ctk.CTkLabel(self, text="", image=icon_menu, bg_color="#a9c2c9")
+            icon.image = icon_menu
+        else:
+            icon = ctk.CTkLabel(self, text="😇", bg_color="#a9c2c9", font=("Arial", 20, "bold"))
+            
+        icon.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
+        
+        
+        subtitle = ctk.CTkLabel(
+            self, text="This application analyzes your study habits and suggests a personalized learning path",
+            font=("Arial", 14, "bold"), text_color="#72577c",
+            wraplength=500,
+            bg_color="#a9c2c9")
+        subtitle.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+        
+        btn_matrix = ctk.CTkButton(
+            self, text="1. Edit my weekly matrix", bg_color="#a9c2c9", fg_color="#c5f7f0",
+            hover_color="#a9c2c9", font=("Arial", 14,"bold"), text_color="#562155")
+        btn_matrix.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
+
+        btn_survey = ctk.CTkButton(
+            self, text="2. Conduct Skills Survey", bg_color="#a9c2c9", fg_color="#c5f7f0",
+            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155")
+        btn_survey.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+        
+        btn_results = ctk.CTkButton(
+            self, text="3. View results", bg_color="#a9c2c9", fg_color="#8e8ca3",
+            hover_color="#72577c", font=("Arial", 14, "bold"), text_color="white",
+            state="disable")
+        btn_results.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
+        
+        btn_exit = ctk.CTkButton(
+            self, text="Exit", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155")
+        btn_exit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
