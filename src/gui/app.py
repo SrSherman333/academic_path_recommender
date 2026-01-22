@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from windows.main_window import MainWindow
+from src.gui.windows.main_window import MainWindow
 
 def run_app():
     ctk.set_appearance_mode("dark")

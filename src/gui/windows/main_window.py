@@ -5,10 +5,12 @@ import tkinter as tk
 class MainWindow(ctk.CTk, tk.Tk):
     def __init__(self):
         super().__init__()
+        from src.core.data_manager import data_manager
         self.title("Academic Path Recommender")
         self.geometry("500x450")
         self.config(bg="#a9c2c9")
         self.resizable(False, False)
+        self.data_manager = data_manager
         self.create_widgets()
         
     def create_widgets(self):
@@ -59,5 +61,6 @@ class MainWindow(ctk.CTk, tk.Tk):
         
         btn_exit = ctk.CTkButton(
             self, text="Exit", bg_color="#a9c2c9", fg_color="transparent",
-            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155")
+            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155",
+            command=self.destroy)
         btn_exit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
