@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
+from src.gui.components.matrix_table import MatrixTable
 
 class EditorWindow(ctk.CTkToplevel):
     """
@@ -24,8 +25,13 @@ class EditorWindow(ctk.CTkToplevel):
         """
         Method that creates and places widgets
         """
-        frame = ctk.CTkScrollableFrame(self, bg_color="#a9c2c9", fg_color="#72577c", width=750, height=450)
+        frame = ctk.CTkScrollableFrame(
+            self, bg_color="#a9c2c9", fg_color="#72577c", 
+            width=750, height=360, orientation="horizontal")
         frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # The frame that will contain the matrix
+        
+        self.matrix_table = MatrixTable(frame, self.data_manager) # Call to the class to be able to locate the table
+        self.matrix_table.grid(row=5, column=3)
         
         title = ctk.CTkLabel( # Label for the title
             self, text="Edit weekly study hours matrix", 
@@ -39,11 +45,11 @@ class EditorWindow(ctk.CTkToplevel):
             "Use a period (.) as the decimal separator. Ex: 1.5"
         )
         
-        subtitle = ctk.CTkLabel(frame, text=instructions, # Label where the previously mentioned instructions will go
-            font=("Arial", 14, "bold"), text_color="#a9c2c9",
+        subtitle = ctk.CTkLabel(self, text=instructions, # Label where the previously mentioned instructions will go
+            font=("Arial", 14, "bold"), text_color="#72577c",
             wraplength=500,
-            bg_color="#72577c")
-        subtitle.grid(row=0, column=5)
+            bg_color="#a9c2c9")
+        subtitle.place(relx=0.5, rely=0.13, anchor=tk.CENTER)
         
         btn_return = ctk.CTkButton( # Button to return to the main window
             self, text="Return to Menu", bg_color="#a9c2c9", fg_color="transparent",
