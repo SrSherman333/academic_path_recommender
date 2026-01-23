@@ -2,7 +2,7 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 import tkinter as tk
 
-class MainWindow(ctk.CTk, tk.Tk):
+class MainWindow(ctk.CTk):
     def __init__(self):
         super().__init__()
         from src.core.data_manager import data_manager
@@ -11,6 +11,7 @@ class MainWindow(ctk.CTk, tk.Tk):
         self.config(bg="#a9c2c9")
         self.resizable(False, False)
         self.data_manager = data_manager
+        self.editor_window = None
         self.create_widgets()
         
     def create_widgets(self):
@@ -45,7 +46,8 @@ class MainWindow(ctk.CTk, tk.Tk):
         
         btn_matrix = ctk.CTkButton(
             self, text="1. Edit my weekly matrix", bg_color="#a9c2c9", fg_color="#c5f7f0",
-            hover_color="#a9c2c9", font=("Arial", 14,"bold"), text_color="#562155")
+            hover_color="#a9c2c9", font=("Arial", 14,"bold"), text_color="#562155",
+            command=self.open_editor_window)
         btn_matrix.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
 
         btn_survey = ctk.CTkButton(
@@ -61,6 +63,14 @@ class MainWindow(ctk.CTk, tk.Tk):
         
         btn_exit = ctk.CTkButton(
             self, text="Exit", bg_color="#a9c2c9", fg_color="transparent",
-            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155",
-            command=self.destroy)
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
+            command=self.destroy, border_color="#8e8ca3", border_width=2)
         btn_exit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+        
+    def open_editor_window(self):
+        from src.gui.windows.editor_window import EditorWindow
+        if self.editor_window is None or not self.editor_window.winfo_exists():
+            self.editor_window = EditorWindow(self)
+            self.editor_window.grab_set()
+        else:
+            self.editor_window.focus()
