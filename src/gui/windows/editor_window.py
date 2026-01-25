@@ -57,16 +57,22 @@ class EditorWindow(ctk.CTkToplevel):
             command=self.destroy, border_color="#8e8ca3", border_width=2)
         btn_return.place(relx=0.1, rely=0.95, anchor=tk.CENTER)
         
+        btn_add_column = ctk.CTkButton( 
+            self, text="Add Column", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
+            border_color="#8e8ca3", border_width=2, command=self.matrix_table.add_columns)
+        btn_add_column.place(relx=0.5, rely=0.95, anchor=tk.CENTER)
+        
         btn_save = ctk.CTkButton( # Button to save the modified array data; the data_manager variable will be used here.
             self, text="Save Data", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
-            border_color="#8e8ca3", border_width=2)
+            border_color="#8e8ca3", border_width=2, command=self.matrix_table.save_values)
         btn_save.place(relx=0.7, rely=0.95, anchor=tk.CENTER)
         
         btn_load = ctk.CTkButton( # Exactly the same as above, but for loading the data
             self, text="Load Data", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
-            border_color="#8e8ca3", border_width=2)
+            border_color="#8e8ca3", border_width=2, command=self.matrix_table.load_values)
         btn_load.place(relx=0.9, rely=0.95, anchor=tk.CENTER)
         
     def on_close(self):
