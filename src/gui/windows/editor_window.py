@@ -26,12 +26,10 @@ class EditorWindow(ctk.CTkToplevel):
         Method that creates and places widgets
         """
         frame = ctk.CTkScrollableFrame(
-            self, bg_color="#a9c2c9", fg_color="#72577c", 
-            width=750, height=360, orientation="horizontal")
-        frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # The frame that will contain the matrix
-        
-        self.matrix_table = MatrixTable(frame, self.data_manager) # Call to the class to be able to locate the table
-        self.matrix_table.grid(row=5, column=3)
+            self, bg_color="#a9c2c9", fg_color="#72577c", scrollbar_fg_color="#562155", 
+            width=750, height=380, orientation="horizontal", scrollbar_button_hover_color="#8e8ca3",
+            scrollbar_button_color="#c5f7f0")
+        frame.place(relx=0.5, rely=0.52, anchor=tk.CENTER) # The frame that will contain the matrix
         
         title = ctk.CTkLabel( # Label for the title
             self, text="Edit weekly study hours matrix", 
@@ -51,17 +49,23 @@ class EditorWindow(ctk.CTkToplevel):
             bg_color="#a9c2c9")
         subtitle.place(relx=0.5, rely=0.13, anchor=tk.CENTER)
         
+        self.matrix_table = MatrixTable(frame, self.data_manager) # Call to the class to be able to locate the table
+        self.matrix_table.grid(row=5, column=3)
+        
+        self.matrix_table.btn_delete.configure(command=self.delete_column_action) # Pass the method to delete columns to the delete button in matrix_table.py
+        
         btn_return = ctk.CTkButton( # Button to return to the main window
             self, text="Return to Menu", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
             command=self.destroy, border_color="#8e8ca3", border_width=2)
         btn_return.place(relx=0.1, rely=0.95, anchor=tk.CENTER)
         
-        btn_add_column = ctk.CTkButton( 
+        self.btn_add_column = ctk.CTkButton( # Button to add columns
             self, text="Add Column", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
-            border_color="#8e8ca3", border_width=2, command=self.matrix_table.add_columns)
-        btn_add_column.place(relx=0.5, rely=0.95, anchor=tk.CENTER)
+            border_color="#8e8ca3", border_width=2, text_color_disabled="#8e8ca3",
+            command=self.add_column_action)
+        self.btn_add_column.place(relx=0.5, rely=0.95, anchor=tk.CENTER)
         
         btn_save = ctk.CTkButton( # Button to save the modified array data; the data_manager variable will be used here.
             self, text="Save Data", bg_color="#a9c2c9", fg_color="transparent",
@@ -74,6 +78,36 @@ class EditorWindow(ctk.CTkToplevel):
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
             border_color="#8e8ca3", border_width=2, command=self.matrix_table.load_values)
         btn_load.place(relx=0.9, rely=0.95, anchor=tk.CENTER)
+        
+    def add_column_action(self):
+        """
+        Method that calls the matrix_table method to add a column, 
+        also calls the button_state method
+        """
+        self.matrix_table.add_columns()
+        self.button_state()
+        
+    def delete_column_action(self):
+        """
+        Exactly the same as above, but to delete
+        """
+        self.matrix_table.delete_columns()
+        self.button_state()
+        
+    def button_state(self): 
+        """
+        Method to activate and deactivate the buttons to add and delete columns, 
+        when they are not within the range [3,10]
+        """
+        if len(self.data_manager.activities) >= 10:
+            self.btn_add_column.configure(state="disabled")
+        else:
+            self.btn_add_column.configure(state="normal")
+            
+        if len(self.data_manager.activities) <= 3:
+            self.matrix_table.btn_delete.configure(state="disabled")
+        else:
+            self.matrix_table.btn_delete.configure(state="normal")
         
     def on_close(self):
         """

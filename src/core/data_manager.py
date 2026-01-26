@@ -54,21 +54,6 @@ class StudyDataManager:
             self.activities[index] = self.text
         else:
             return False
-            
-    def add_activities(self, new_activitie):
-        """
-        Method to add a new activity (column), using the name of the new activitie as a parameter
-        """
-        self.new_activitie = new_activitie
-        self.activities.append(self.new_activitie)
-        
-    def remove_activities(self, delete_activitie):
-        """
-        Method to remove a specific activity (column), using the name of the selected 
-        activity as a parameter.
-        """
-        self.delete_activitie = delete_activitie
-        self.activities.remove(self.delete_activitie)
         
     def save_to_file(self, filename="study_data.json"):
         """
