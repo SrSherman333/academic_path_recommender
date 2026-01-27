@@ -19,6 +19,7 @@ class MainWindow(ctk.CTk):
         self.resizable(False, False)
         self.data_manager = data_manager # Variable to access the imported instance
         self.editor_window = None
+        self.survey_window = None
         self.create_widgets() # Call the method responsible for creating and placing widgets
         
     def create_widgets(self):
@@ -62,7 +63,8 @@ class MainWindow(ctk.CTk):
 
         btn_survey = ctk.CTkButton( # Button to open the window where the respective survey will be answered
             self, text="2. Conduct Skills Survey", bg_color="#a9c2c9", fg_color="#c5f7f0",
-            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155")
+            hover_color="#a9c2c9", font=("Arial", 14, "bold"), text_color="#562155",
+            command=self.open_survey_window)
         btn_survey.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
         
         btn_results = ctk.CTkButton( # Button to open the window where the results, including the graphs, will be displayed
@@ -87,3 +89,11 @@ class MainWindow(ctk.CTk):
             self.editor_window.grab_set()
         else:
             self.editor_window.focus()
+            
+    def open_survey_window(self):
+        from src.gui.windows.survey_window import SurveyWindow
+        if self.survey_window is None or not self.survey_window.winfo_exists():
+            self.survey_window = SurveyWindow(self)
+            self.survey_window.grab_set()
+        else:
+            self.survey_window.focus()
