@@ -56,3 +56,31 @@ class SurveyWindow(ctk.CTkToplevel):
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
             command=self.destroy, border_color="#8e8ca3", border_width=2)
         btn_return.place(relx=0.1, rely=0.95, anchor=tk.CENTER)
+        
+        self.btn_save = ctk.CTkButton(
+            self, text="Survey Completed", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155", 
+            border_color="#8e8ca3", border_width=2, state="disabled", text_color_disabled="#8e8ca3")
+        self.btn_save.place(relx=0.9, rely=0.95, anchor=tk.CENTER)
+        
+        for i in self.survey_form1.radio_buttons:
+            i.configure(command=self.save_suvey)
+        
+        self.survey_form2.hours_var.trace_add("write", self.save_suvey)
+        self.survey_form2.Hmin_var.trace_add("write", self.save_suvey)
+        self.survey_form2.Pmin_var.trace_add("write", self.save_suvey)
+        
+    def save_suvey(self, *args):
+        enable = None
+        values = []
+        for i, j in self.survey_form1.radio_vars.items():
+            values.append(j.get())
+        if 0 in values:
+            enable = False
+        else:
+            enable = True
+        
+        if enable == True and self.survey_form2.hours_var.get() != "" and self.survey_form2.Hmin_var.get() != "" and self.survey_form2.Pmin_var.get() != "":
+            self.btn_save.configure(state="normal")
+        else:
+            self.btn_save.configure(state="disabled")

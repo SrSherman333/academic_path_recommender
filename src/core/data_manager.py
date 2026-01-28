@@ -22,12 +22,13 @@ class StudyDataManager:
                     "Project/Programming", "Review/Assessment"]
         
         self.survey_data = { # Results of the survey
-            "question1":0.0,
-            "question2":0,
-            "question3":0,
-            "question4":0,
-            "question5":0.0,
-            "question6":0.0
+            "Reading/Theory":(1, 0),
+            "Exercises/Practice":(2, 0),
+            "Project/Programming":(2, 0),
+            "Review/Assessment":(1, 0),
+            "h":0.0,
+            "Hmin":0.0,
+            "Pmin":0.0
         }
         
     def update_matrix(self, row, column, value):
