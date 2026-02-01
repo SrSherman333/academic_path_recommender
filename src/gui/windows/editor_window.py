@@ -29,7 +29,7 @@ class EditorWindow(ctk.CTkToplevel):
             self, bg_color="#a9c2c9", fg_color="#72577c", scrollbar_fg_color="#562155", 
             width=750, height=380, orientation="horizontal", scrollbar_button_hover_color="#8e8ca3",
             scrollbar_button_color="#c5f7f0")
-        frame.place(relx=0.5, rely=0.52, anchor=tk.CENTER) # The frame that will contain the matrix
+        frame.place(relx=0.5, rely=0.55, anchor=tk.CENTER) # The frame that will contain the matrix
         
         title = ctk.CTkLabel( # Label for the title
             self, text="Edit weekly study hours matrix", 
@@ -40,16 +40,27 @@ class EditorWindow(ctk.CTkToplevel):
         instructions = ( # tuple with the instructions for the operation of this window
             "Adjust the times for each activity and day.\n"
             "You can change the names of the activities in each column.\n"
-            "Use a period (.) as the decimal separator. Ex: 1.5"
+            "Use a period (.) as the decimal separator. Ex: 1.5\n"
+            "When you're finished, click on 'Save data'"
         )
         
         subtitle = ctk.CTkLabel(self, text=instructions, # Label where the previously mentioned instructions will go
             font=("Arial", 14, "bold"), text_color="#72577c",
             wraplength=500,
             bg_color="#a9c2c9")
-        subtitle.place(relx=0.5, rely=0.13, anchor=tk.CENTER)
+        subtitle.place(relx=0.5, rely=0.14, anchor=tk.CENTER)
         
-        self.matrix_table = MatrixTable(frame, self.data_manager) # Call to the class to be able to locate the table
+        def information(texto, info=""):
+            info += texto
+            self.errors.configure(text=info)
+        
+        self.errors = ctk.CTkLabel(
+            self, text="information", bg_color="#a9c2c9", fg_color="#562155", text_color="#c5f7f0", 
+            font=("Arial", 12, "bold"), width=200, height=100, wraplength=190, corner_radius=10
+        )
+        self.errors.place(relx=0.86, rely=0.1, anchor=tk.CENTER)
+        
+        self.matrix_table = MatrixTable(frame, self.data_manager, callback=information) # Call to the class to be able to locate the table
         self.matrix_table.grid(row=5, column=3)
         
         self.matrix_table.btn_delete.configure(command=self.delete_column_action) # Pass the method to delete columns to the delete button in matrix_table.py

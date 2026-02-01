@@ -64,11 +64,11 @@ class SurveyForm2(ctk.CTkFrame):
             )
         order1.grid(row=1, column=0, pady=5, padx=5)
         
-        widgets_sliders = []
+        self.widgets_sliders = []
         widgets_levels = []
         
         def slider_event(event):
-            for i, value in enumerate(widgets_sliders):
+            for i, value in enumerate(self.widgets_sliders):
                 value = value.get()
                 widgets_levels[i].configure(text=f"{int(value)}")
         
@@ -86,7 +86,7 @@ class SurveyForm2(ctk.CTkFrame):
             )
             sliders.grid(row=i+2, column=1)
             sliders.set(1)
-            widgets_sliders.append(sliders)
+            self.widgets_sliders.append(sliders)
             
             levels = ctk.CTkLabel(
                 self, text="1", bg_color="#72577c", fg_color="#562155", text_color="#c5f7f0",
@@ -106,11 +106,11 @@ class SurveyForm2(ctk.CTkFrame):
         self.hours_entrie = ctk.CTkEntry(self, width=50, placeholder_text="0.0", textvariable=self.hours_var)
         self.hours_entrie.grid(row=(len(widgets_levels)+3)-1, column=1, pady=5, padx=5)
         
-        errors = ctk.CTkLabel(
+        self.errors = ctk.CTkLabel(
             self, text="Possible errors will appear here", bg_color="#72577c", fg_color="#562155", text_color="#c5f7f0", 
             font=("Arial", 12, "bold"), width=150, height=100, wraplength=90, corner_radius=10
         )
-        errors.grid(row=(len(widgets_levels)+3)-1, column=2, columnspan=2, rowspan=3, pady=5)
+        self.errors.grid(row=(len(widgets_levels)+3)-1, column=2, columnspan=2, rowspan=3, pady=5)
         
         order3 = ctk.CTkLabel(
             self, text="3. Minimum threshold of hours/day (Hmin, e.g., 3.0):", 

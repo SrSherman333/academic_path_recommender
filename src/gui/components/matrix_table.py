@@ -5,13 +5,15 @@ class MatrixTable(ctk.CTkFrame):
     """
     Class where the entire table and its logic will be created
     """
-    def __init__(self, master, data_manager):
+    def __init__(self, master, data_manager, callback):
         super().__init__(master)
         self.data_manager = data_manager
+        self.callback = callback
         self.configure(fg_color="#72577c")
         self.entries = [] # List that will store all the entries in the matrix
         self.activities = [] # List that will store all activity entries
         self.columns = [] # List that stores all the labels that list the columns
+        self.colors = {}
         self.create_widgets()
         
     def create_widgets(self):
@@ -42,6 +44,61 @@ class MatrixTable(ctk.CTkFrame):
             text_color="#c5f7f0", corner_radius=60,font=("Arial", 14, "bold"),
             hover_color="#8e8ca3")
         self.btn_delete.grid(row=9, column=4, pady=20)
+            
+    def data_validation(self, *args):
+        for i, value1 in enumerate(self.entries):
+            for j, value2 in enumerate(value1):
+                try:
+                    value = float(value2.get())
+                    if not 0 <= value <= 24:
+                        self.entries[i][j].configure(border_color="#950606")
+                    else:
+                        self.entries[i][j].configure(border_color="gray")
+                except ValueError:
+                    self.entries[i][j].configure(border_color="#922B21")
+                    
+        entrys_counter = {"Boundaries": 0, "Letters": 0}
+        for i, value1 in enumerate(self.entries):
+            for j, value2 in enumerate(value1):
+                if value2.cget("border_color") == "#950606":
+                    entrys_counter["Boundaries"] += 1
+                elif value2.cget("border_color") == "#922B21":
+                    entrys_counter["Letters"] += 1
+                
+        if entrys_counter["Boundaries"] > 0 and entrys_counter["Letters"] > 0:
+            self.callback("There are values ​​outside the limits and non-numerical values")
+            return False
+        elif entrys_counter["Boundaries"] > 0:
+            self.callback("Value(s) outside the limits [0, 24]")
+            return False
+        elif entrys_counter["Letters"] > 0:
+            self.callback("Non-numeric value(s)")
+            return False
+        else:
+            self.callback("Information")
+        
+        day_entries_past = []
+        for i in self.entries:
+            temp = []
+            for j in i:
+                temp.append(float(j.get()))
+            day_entries_past.append(temp)
+            
+        for i, value1 in enumerate(day_entries_past):
+            if 0 <= sum(value1) <= 12:
+                self.colors[i] = "gray"
+            elif 13 <= sum(value1) <= 16:
+                self.colors[i] = "orange"
+                self.callback("Orange: You're logging a very intense day (13+ hours). Don't forget to rest!")
+            elif 17 <= sum(value1) <= 24:
+                self.colors[i] = "red"
+                self.callback("Red: Are you sure? You've logged 17+ hours of study. This pace is difficult to maintain and could affect your health")
+            else:
+                for j, value2 in enumerate(value1):
+                    self.entries[i][j].configure(border_color="#7E5109")
+                self.callback("Brown: Error (Correct to continue), more than 24 hours of study in one day")
+                return False
+        return True
             
     def update_data_from_gui(self):
         """
@@ -102,11 +159,16 @@ class MatrixTable(ctk.CTkFrame):
         for i, value1 in enumerate(self.data_manager.weekly_log):
             day_entries = []
             for j, value2 in enumerate(value1):
-                entries = ctk.CTkEntry(self, width=50)
+                entries = ctk.CTkEntry(self, width=50, justify="center")
                 entries.insert(0, value2)
                 day_entries.append(entries)
                 entries.grid(row=i+1, column=j+1)
             self.entries.append(day_entries)
+            
+        if self.colors != None:
+            for i, value1 in enumerate(self.entries):
+                for j, value2 in enumerate(value1):
+                    self.entries[i][j].configure(border_color=self.colors.get(i, "gray"))
     
     def add_columns(self):
         """
@@ -115,53 +177,63 @@ class MatrixTable(ctk.CTkFrame):
         and finally calls the function that deletes and recreates the table based on the 
         data_manager array values
         """
-        self.update_data_from_gui()
-        
-        for i, value in enumerate(self.data_manager.weekly_log):
-            self.data_manager.weekly_log[i].append(0.0)
+        if self.data_validation():
+            self.update_data_from_gui()
             
-        self.data_manager.activities.append("Activity")
-        
-        list_columns = []
-        for i, value in enumerate(self.data_manager.activities):
-            list_columns.append(f"Column {i}")
-        self.cb_columns.configure(values=list_columns)
-        
-        self.redraw_table()
+            for i, value in enumerate(self.data_manager.weekly_log):
+                self.data_manager.weekly_log[i].append(0.0)
+                
+            self.data_manager.activities.append("Activity")
+            
+            list_columns = []
+            for i, value in enumerate(self.data_manager.activities):
+                list_columns.append(f"Column {i}")
+            self.cb_columns.configure(values=list_columns)
+            
+            self.redraw_table()
+        else:
+            print(False)
         
     def delete_columns(self):
         """
         It's practically the same as the previous method, but checking the current value of the 
         ComboBox to remove the column and activity with that index in the data_manager
         """
-        self.update_data_from_gui()
-        
-        for i, value in enumerate(self.cb_columns._values):
-            if self.cb_columns.get() == value:
-                for j, value in enumerate(self.data_manager.weekly_log):
-                    self.data_manager.weekly_log[j].pop(i)
-                self.data_manager.activities.pop(i)
-                list_columns = []
-                for i, value in enumerate(self.data_manager.activities):
-                    list_columns.append(f"Column {i}")
-                self.cb_columns.configure(values=list_columns)
-                
-        self.redraw_table()
+        if self.data_validation():
+            self.update_data_from_gui()
+            
+            for i, value in enumerate(self.cb_columns._values):
+                if self.cb_columns.get() == value:
+                    for j, value in enumerate(self.data_manager.weekly_log):
+                        self.data_manager.weekly_log[j].pop(i)
+                    self.data_manager.activities.pop(i)
+                    list_columns = []
+                    for i, value in enumerate(self.data_manager.activities):
+                        list_columns.append(f"Column {i}")
+                    self.cb_columns.configure(values=list_columns)
+                    
+            self.redraw_table()
+        else:
+            print(False)
             
     def save_values(self):
         """
         A method that calls the method to save the current data in the data_manager, 
         and then calls the data_manager's method to save everything to a .json file
         """
-        self.update_data_from_gui()
-            
-        self.data_manager.save_to_file()
+        if self.data_validation():
+            self.update_data_from_gui()
+                
+            self.data_manager.save_to_file()
+        else:
+            print(False)
         
     def load_values(self):
         """
         The same as in the method above, but loading the data from the .json file that must 
         have been previously created
         """
-        self.data_manager.load_from_file()
-        
-        self.redraw_table()
+        if self.data_manager.load_from_file():
+            self.redraw_table()
+        else:
+            print(False)

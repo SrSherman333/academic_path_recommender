@@ -60,17 +60,18 @@ class SurveyWindow(ctk.CTkToplevel):
         self.btn_save = ctk.CTkButton(
             self, text="Survey Completed", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155", 
-            border_color="#8e8ca3", border_width=2, state="disabled", text_color_disabled="#8e8ca3")
+            border_color="#8e8ca3", border_width=2, state="disabled", text_color_disabled="#8e8ca3",
+            command=self.save_values)
         self.btn_save.place(relx=0.9, rely=0.95, anchor=tk.CENTER)
         
         for i in self.survey_form1.radio_buttons:
-            i.configure(command=self.save_suvey)
+            i.configure(command=self.check_values)
         
-        self.survey_form2.hours_var.trace_add("write", self.save_suvey)
-        self.survey_form2.Hmin_var.trace_add("write", self.save_suvey)
-        self.survey_form2.Pmin_var.trace_add("write", self.save_suvey)
+        self.survey_form2.hours_var.trace_add("write", self.check_values)
+        self.survey_form2.Hmin_var.trace_add("write", self.check_values)
+        self.survey_form2.Pmin_var.trace_add("write", self.check_values)
         
-    def save_suvey(self, *args):
+    def check_values(self, *args):
         enable = None
         values = []
         for i, j in self.survey_form1.radio_vars.items():
@@ -84,3 +85,19 @@ class SurveyWindow(ctk.CTkToplevel):
             self.btn_save.configure(state="normal")
         else:
             self.btn_save.configure(state="disabled")
+            
+    def save_values(self):
+        self.data_manager.survey_data.clear()
+        count = 0
+        for i, j in self.survey_form1.radio_vars.items():
+            self.data_manager.survey_data[i] = (j.get(), int(self.survey_form2.widgets_sliders[count].get()))
+            count += 1
+        
+        if not self.survey_form2.hours_entrie.get().isdigit() or not self.survey_form2.Hmin_entrie.get().isdigit() or not self.survey_form2.Pmin_entrie.get().isdigit():
+            self.survey_form2.errors.configure(text="Error: Enter only valid numbers")
+            self.after(3000, lambda:self.survey_form2.errors.configure(text="Possible errors will appear here"))
+        else:
+            self.data_manager.survey_data["h"] = self.survey_form2.hours_entrie.get()
+            self.data_manager.survey_data["Hmin"] = self.survey_form2.Hmin_entrie.get()
+            self.data_manager.survey_data["Pmin"] = self.survey_form2.Pmin_entrie.get()
+        print(self.data_manager.survey_data)
