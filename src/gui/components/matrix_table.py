@@ -14,6 +14,7 @@ class MatrixTable(ctk.CTkFrame):
         self.activities = [] # List that will store all activity entries
         self.columns = [] # List that stores all the labels that list the columns
         self.colors = {}
+        self.count_survey = 4
         self.create_widgets()
         
     def create_widgets(self):
@@ -34,7 +35,7 @@ class MatrixTable(ctk.CTkFrame):
         
         list_columns = [] # Temporary list for writing column indexes
         for i, value in enumerate(self.data_manager.activities):
-            list_columns.append(f"Column {i}")
+            list_columns.append(f"Column {i+1}")
         
         self.cb_columns = ctk.CTkComboBox(self, values=list_columns, width=250) # ComboBox to select a column that you want to delete
         self.cb_columns.grid(row=9, column=2, columnspan=2, pady=20)
@@ -150,7 +151,7 @@ class MatrixTable(ctk.CTkFrame):
             activities.grid(row=0, column=i+1)
             
             column = ctk.CTkLabel(
-                self, text=f"Column {i}", bg_color="#72577c", fg_color="#562155", 
+                self, text=f"Column {i+1}", bg_color="#72577c", fg_color="#562155", 
                 text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold"))
             column.grid(row=8, column=i+1)
             self.columns.append(column) 
@@ -173,7 +174,7 @@ class MatrixTable(ctk.CTkFrame):
     def add_columns(self):
         """
         This method saves the data by calling one of the previously mentioned functions, 
-        then adds default values ​​(0.0, Activity) to the data_manager, updates the ComboBox values,
+        then adds default values (0.0, Activity) to the data_manager, updates the ComboBox values,
         and finally calls the function that deletes and recreates the table based on the 
         data_manager array values
         """
@@ -183,11 +184,13 @@ class MatrixTable(ctk.CTkFrame):
             for i, value in enumerate(self.data_manager.weekly_log):
                 self.data_manager.weekly_log[i].append(0.0)
                 
-            self.data_manager.activities.append("Activity")
+            self.count_survey += 1
+            self.data_manager.activities.append(f"Activity {self.count_survey}")
+            self.data_manager.survey_data[f"Activity {self.count_survey}"] = (0, 0)
             
             list_columns = []
             for i, value in enumerate(self.data_manager.activities):
-                list_columns.append(f"Column {i}")
+                list_columns.append(f"Column {i+1}")
             self.cb_columns.configure(values=list_columns)
             
             self.redraw_table()
@@ -207,11 +210,13 @@ class MatrixTable(ctk.CTkFrame):
                     for j, value in enumerate(self.data_manager.weekly_log):
                         self.data_manager.weekly_log[j].pop(i)
                     self.data_manager.activities.pop(i)
+                    self.data_manager.survey_data.pop(f"Activity {self.count_survey}", None)
                     list_columns = []
                     for i, value in enumerate(self.data_manager.activities):
-                        list_columns.append(f"Column {i}")
+                        list_columns.append(f"Column {i+1}")
                     self.cb_columns.configure(values=list_columns)
                     
+            self.count_survey -= 1
             self.redraw_table()
         else:
             print(False)

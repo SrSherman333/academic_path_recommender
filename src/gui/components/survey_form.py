@@ -25,7 +25,7 @@ class SurveyForm1(ctk.CTkFrame):
             )
             activities.grid(row=i+1, column=0, pady=5, padx=5)
             
-            self.radio_vars[value] = tk.IntVar(value=0)
+            self.radio_vars[value] = tk.IntVar(value=self.data_manager.survey_data[value][0])
             current_var = self.radio_vars[value]
             
             self.option1 = ctk.CTkRadioButton(
