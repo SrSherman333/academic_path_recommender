@@ -96,8 +96,8 @@ class MatrixTable(ctk.CTkFrame):
                 self.callback("Red: Are you sure? You've logged 17+ hours of study. This pace is difficult to maintain and could affect your health")
             else:
                 for j, value2 in enumerate(value1):
-                    self.entries[i][j].configure(border_color="#7E5109")
-                self.callback("Brown: Error (Correct to continue), more than 24 hours of study in one day")
+                    self.entries[i][j].configure(border_color="#FFD700")
+                self.callback("Yellow: Error (Correct to continue), more than 24 hours of study in one day")
                 return False
         return True
             

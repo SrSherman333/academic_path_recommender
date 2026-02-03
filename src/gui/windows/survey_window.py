@@ -87,17 +87,43 @@ class SurveyWindow(ctk.CTkToplevel):
             self.btn_save.configure(state="disabled")
             
     def save_values(self):
-        self.data_manager.survey_data.clear()
-        count = 0
-        for i, j in self.survey_form1.radio_vars.items():
-            self.data_manager.survey_data[i] = (j.get(), int(self.survey_form2.widgets_sliders[count].get()))
-            count += 1
-        
-        if not self.survey_form2.hours_entrie.get().isdigit() or not self.survey_form2.Hmin_entrie.get().isdigit() or not self.survey_form2.Pmin_entrie.get().isdigit():
-            self.survey_form2.errors.configure(text="Error: Enter only valid numbers")
+        try:
+            h = float(self.survey_form2.hours_entrie.get())
+            Hmin = float(self.survey_form2.Hmin_entrie.get())
+            Pmin = float(self.survey_form2.Pmin_entrie.get())
+        except ValueError:
+            self.survey_form2.errors.configure(text="Error: Enter only numbers, not letters or symbols")
+            self.after(3000, lambda:self.survey_form2.errors.configure(text="Possible errors will appear here"))
+            
+        fails = 0
+        if not 0 < h <= 24:
+            fails += 1
+            self.survey_form2.hours_entrie.configure(border_color="red")
+        else:
+            self.survey_form2.hours_entrie.configure(border_color="gray")
+            
+        if not 0 < Hmin <= h:
+            fails += 1
+            self.survey_form2.Hmin_entrie.configure(border_color="red")
+        else:
+            self.survey_form2.Hmin_entrie.configure(border_color="gray")
+            
+        if not 0 <= Pmin <= 1:
+            fails += 1
+            self.survey_form2.Pmin_entrie.configure(border_color="red")
+        else:
+            self.survey_form2.Pmin_entrie.configure(border_color="gray")
+            
+        if fails > 0:
+            self.survey_form2.errors.configure(text=f"Error: There are {fails} value(s) out of range, Correct it to continue")
             self.after(3000, lambda:self.survey_form2.errors.configure(text="Possible errors will appear here"))
         else:
-            self.data_manager.survey_data["h"] = self.survey_form2.hours_entrie.get()
-            self.data_manager.survey_data["Hmin"] = self.survey_form2.Hmin_entrie.get()
-            self.data_manager.survey_data["Pmin"] = self.survey_form2.Pmin_entrie.get()
+            self.data_manager.survey_data.clear()
+            count = 0
+            for i, j in self.survey_form1.radio_vars.items():
+                self.data_manager.survey_data[i] = (j.get(), int(self.survey_form2.widgets_sliders[count].get()))
+                count += 1
+            self.data_manager.survey_data["h"] = h
+            self.data_manager.survey_data["Hmin"] = Hmin
+            self.data_manager.survey_data["Pmin"] = Pmin
         print(self.data_manager.survey_data)
