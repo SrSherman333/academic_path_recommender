@@ -20,6 +20,8 @@ class MainWindow(ctk.CTk):
         self.data_manager = data_manager # Variable to access the imported instance
         self.editor_window = None
         self.survey_window = None
+        self.step1 = False
+        self.step2 = False
         self.create_widgets() # Call the method responsible for creating and placing widgets
         
     def create_widgets(self):
@@ -67,17 +69,42 @@ class MainWindow(ctk.CTk):
             command=self.open_survey_window)
         btn_survey.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
         
-        btn_results = ctk.CTkButton( # Button to open the window where the results, including the graphs, will be displayed
+        self.btn_results = ctk.CTkButton( # Button to open the window where the results, including the graphs, will be displayed
             self, text="3. View results", bg_color="#a9c2c9", fg_color="#8e8ca3",
             hover_color="#72577c", font=("Arial", 14, "bold"), text_color="white",
             state="disable") # Disabled until the survey is completed
-        btn_results.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
+        self.btn_results.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
         
         btn_exit = ctk.CTkButton( # Button to close the app
             self, text="Exit", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
             command=self.destroy, border_color="#8e8ca3", border_width=2)
         btn_exit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+        
+    def comprobation(self):
+        total_matrix = []
+        for i in self.data_manager.weekly_log:
+            total_matrix.append(sum(i))
+        
+        if sum(total_matrix) > 0:
+            self.step1 = True
+            print(f"Paso 1: {self.step1}")
+        else:
+            self.step1 = False
+            print(f"Paso 1: {self.step1}")
+            
+        if self.data_manager.survey_data["h"] > 0:
+            self.step2 = True
+            print(f"Paso 2: {self.step2}")
+        else:
+            self.step2 = False
+            print(f"Paso 2: {self.step2}")
+            
+        if self.step1 and self.step2:
+            self.btn_results.configure(state="normal", fg_color="#c5f7f0", 
+                                    hover_color="#a9c2c9", text_color="#562155")
+        else:
+            self.btn_results.configure(state="disabled", fg_color="#8e8ca3", text_color="white")
         
     def open_editor_window(self):
         """

@@ -68,7 +68,7 @@ class EditorWindow(ctk.CTkToplevel):
         btn_return = ctk.CTkButton( # Button to return to the main window
             self, text="Return to Menu", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
-            command=self.destroy, border_color="#8e8ca3", border_width=2)
+            command=self.on_close, border_color="#8e8ca3", border_width=2)
         btn_return.place(relx=0.1, rely=0.95, anchor=tk.CENTER)
         
         self.btn_add_column = ctk.CTkButton( # Button to add columns
@@ -125,3 +125,5 @@ class EditorWindow(ctk.CTkToplevel):
         This method is where the previously mentioned information about the message when 
         trying to close the window will be put
         """
+        self.parent.comprobation()
+        self.destroy()
