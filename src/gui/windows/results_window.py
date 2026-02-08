@@ -28,8 +28,9 @@ class ResultsWindow(ctk.CTkToplevel):
             bg_color="#a9c2c9")
         section1.place(relx=0.1, rely=0.1, anchor=tk.CENTER)
         
+        # First frame
         self.frame1 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9", width=300
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=250
         )
         self.frame1.place(relx=0.2, rely=0.3, anchor=tk.CENTER)
         
@@ -50,13 +51,46 @@ class ResultsWindow(ctk.CTkToplevel):
             self.frame1, text="Weekly total:", bg_color="#72577c", fg_color="#562155", 
             text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
         )
-        frame1_title2.grid(row=9, column=0)
+        frame1_title2.grid(row=9, column=0, pady=5)
         
+        # Second frame
         self.frame2 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9"
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=500
         )
-        self.frame2.place(relx=0.6, rely=0.3, anchor=tk.CENTER)
+        self.frame2.place(relx=0.66, rely=0.3, anchor=tk.CENTER)
         
+        frame2_title1 = ctk.CTkLabel(
+            self.frame2, text="Hours per activity:", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame2_title1.grid(row=0, column=0)
+        
+        for i, value in enumerate(self.data_manager.activities):
+            activities = ctk.CTkLabel(
+                self.frame2, text=value, bg_color="#72577c", fg_color="#72577c", 
+                text_color="#c5f7f0", font=("Arial", 14, "bold")
+            )
+            activities.grid(row=i+2, column=0)
+            
+        frame2_title2 = ctk.CTkLabel(
+            self.frame2, text="Practice ratio (P):", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame2_title2.grid(row=len(self.data_manager.activities)+2, column=0, pady=5)
+        
+        frame3_title2 = ctk.CTkLabel(
+            self.frame2, text="Day with the least study:", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame3_title2.grid(row=len(self.data_manager.activities)+3, column=0, pady=5)
+        
+        frame3_title2 = ctk.CTkLabel(
+            self.frame2, text="Dominant activity:", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame3_title2.grid(row=len(self.data_manager.activities)+4, column=0,pady=5)
+        
+        # Section 2 -------------------------------------
         section2 = ctk.CTkLabel(
             self, text="Recomendations:", 
             font=("Arial", 14, "bold"), text_color="#72577c", wraplength=500, 
@@ -64,13 +98,32 @@ class ResultsWindow(ctk.CTkToplevel):
         section2.place(relx=0.1, rely=0.5, anchor=tk.CENTER)
         
         self.frame3 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9"
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=375
         )
-        self.frame3.place(relx=0.3, rely=0.7, anchor=tk.CENTER)
+        self.frame3.place(relx=0.25, rely=0.7, anchor=tk.CENTER)
+        
+        frame3_title1 = ctk.CTkLabel(
+            self.frame3, text="Suggested route:", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame3_title1.grid(row=0, column=0, pady=5)
+        
+        frame3_title2 = ctk.CTkLabel(
+            self.frame3, text="Weekly status:", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame3_title2.grid(row=1, column=0, pady=5)
+        
+        frame3_title3 = ctk.CTkLabel(
+            self.frame3, text="Specific action:", bg_color="#72577c", fg_color="#562155", 
+            text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
+        )
+        frame3_title3.grid(row=2, column=0, pady=5)
         
         self.analyze_data()
         
     def analyze_data(self):
+        # Data from the first frame
         total_days = []
         total_weekly = 0
         weakest_day = 0
@@ -94,6 +147,66 @@ class ResultsWindow(ctk.CTkToplevel):
             
         weekly_hours = ctk.CTkLabel(
             self.frame1, text=f"{total_weekly:.2f} hours", bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14)
+            text_color="#c5f7f0", font=("Arial", 14, "bold")
         )
-        weekly_hours.grid(row=9, column=1)
+        weekly_hours.grid(row=9, column=1, pady=5)
+        
+        # Data from the second frame
+        totals_act = totals_activity(self.data_manager.weekly_log)
+        
+        for i, value in enumerate(totals_act):
+            hours_activities = ctk.CTkLabel(
+                self.frame2, text=f"{value:.2f} hours", bg_color="#72577c", fg_color="#72577c", 
+                text_color="#c5f7f0", font=("Arial", 14)
+            )
+            hours_activities.grid(row=i+2, column=1)
+            
+        P = practical_proportion(totals_act)
+        
+        result_P = ctk.CTkLabel(
+            self.frame2, text=f"{P:.2%}", bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold")
+        )
+        result_P.grid(row=len(self.data_manager.activities)+2, column=1, pady=5)
+        
+        weak_day = ctk.CTkLabel(
+            self.frame2, text=f"Day {weakest_day}", bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold")
+        )
+        weak_day.grid(row=len(self.data_manager.activities)+3, column=1, pady=5)
+        
+        dominant_activity = data_manager.activities[totals_act.index(max(totals_act))]
+        
+        dom_activitiy = ctk.CTkLabel(
+            self.frame2, text=dominant_activity , bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold")
+        )
+        dom_activitiy.grid(row=len(self.data_manager.activities)+4, column=1, pady=5)
+        
+        # Data from the third frame
+        h = data_manager.survey_data["h"]
+        d = []
+        for i in data_manager.activities:
+            d.append(data_manager.survey_data[i][1])
+        Hmin = data_manager.survey_data["Hmin"]
+        Pmin = data_manager.survey_data["Pmin"]
+            
+        route, action, state = recommend_route(h, d, P, Hmin, Pmin)
+        
+        route_result = ctk.CTkLabel(
+            self.frame3, text=route , bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=220
+        )
+        route_result.grid(row=0, column=1, pady=5, padx=10)
+        
+        state_result = ctk.CTkLabel(
+            self.frame3, text=state , bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=220
+        )
+        state_result.grid(row=1, column=1, pady=5, padx=10)
+        
+        action_result = ctk.CTkLabel(
+            self.frame3, text=action , bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=220
+        )
+        action_result.grid(row=2, column=1, pady=5, padx=10)

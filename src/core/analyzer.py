@@ -1,3 +1,4 @@
+from src.core.data_manager import data_manager
 # Functions for the logic of the program
 def total_day(daily_list):
     # Calculate the total number of hours in a day
@@ -5,26 +6,36 @@ def total_day(daily_list):
 
 def totals_activity(matrix):
     # Calculate weekly totals by activity (sum by columns)
-    totals = [0, 0, 0, 0]
+    totals = []
+    
+    for i in range(len(data_manager.activities)):
+        totals.append(0)
 
     for day in matrix:
-        for i in range(4):
+        for i in range(len(data_manager.activities)):
             totals[i] += day[i]
-
+            
     return totals
 
 def practical_proportion(totals):
     # Calculate the proportion of practice hours (Exercises + Project)
-    exercise_hours = totals[1]
-    project_hours = totals[2]
+    indexs = []
+    for i, value in enumerate(data_manager.activities):
+        if data_manager.survey_data[value][0] == 2:
+            indexs.append(i)
+            
+    totals_practice = 0
+    for i in indexs:
+        totals_practice += totals[i]
+            
     total_weekly = sum(totals)
 
     if total_weekly > 0:
-        return (exercise_hours + project_hours) / total_weekly
+        return (totals_practice) / total_weekly
     else:
         return 0.0
 
-def recommend_route(h, pd, md, r, P, Hmin, Pmin):
+def recommend_route(h, d, P, Hmin, Pmin):
     # Apply the rules to generate recommendations
     daily_average = h
 
@@ -40,12 +51,19 @@ def recommend_route(h, pd, md, r, P, Hmin, Pmin):
         state = "Critical"
 
     # Determine main route
-    if pd >= 4 or P < Pmin:
-        route = "Programming"
-    elif md >= 4 and r >= 3:
-        route = "Math"
-    elif r <= 2:
-        route = "Technical Reading"
+    route = "Focus on "
+    difficult = max(d)
+    if difficult >= 4:
+        max_difficult = {}
+        for i, value in enumerate(data_manager.activities):
+            if d[i] >= 4:
+                max_difficult[value] = (data_manager.survey_data[value][0], d[i])
+                
+        for i, value in enumerate(max_difficult):
+            if (max_difficult[value][0] == 2 and max_difficult[value][1] == difficult) or P < Pmin:
+                route += f"|{value}| "
+            elif max_difficult[value][0] == 1 and max_difficult[value][1] == difficult:
+                route += f"|{value}|"
     else:
         route = "Balanced"
 
