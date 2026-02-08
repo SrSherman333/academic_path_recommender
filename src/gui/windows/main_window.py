@@ -20,7 +20,8 @@ class MainWindow(ctk.CTk):
         self.data_manager = data_manager # Variable to access the imported instance
         self.editor_window = None
         self.survey_window = None
-        self.step1 = False
+        self.results_window = None
+        self.step1 = True
         self.step2 = False
         self.create_widgets() # Call the method responsible for creating and placing widgets
         
@@ -72,7 +73,7 @@ class MainWindow(ctk.CTk):
         self.btn_results = ctk.CTkButton( # Button to open the window where the results, including the graphs, will be displayed
             self, text="3. View results", bg_color="#a9c2c9", fg_color="#8e8ca3",
             hover_color="#72577c", font=("Arial", 14, "bold"), text_color="white",
-            state="disable") # Disabled until the survey is completed
+            state="normal", command=self.open_results_window) # Disabled until the survey is completed
         self.btn_results.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
         
         btn_exit = ctk.CTkButton( # Button to close the app
@@ -124,3 +125,11 @@ class MainWindow(ctk.CTk):
             self.survey_window.grab_set()
         else:
             self.survey_window.focus()
+            
+    def open_results_window(self):
+        from src.gui.windows.results_window import ResultsWindow
+        if self.results_window is None or not self.results_window.winfo_exists():
+            self.results_window = ResultsWindow(self)
+            self.results_window.grab_set()
+        else:
+            self.results_window.focus()
