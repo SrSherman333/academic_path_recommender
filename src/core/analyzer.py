@@ -51,28 +51,59 @@ def recommend_route(h, d, P, Hmin, Pmin):
         state = "Critical"
 
     # Determine main route
-    route = "Focus on "
-    difficult = max(d)
-    if difficult >= 4:
-        max_difficult = {}
-        for i, value in enumerate(data_manager.activities):
-            if d[i] >= 4:
-                max_difficult[value] = (data_manager.survey_data[value][0], d[i])
-                
-        for i, value in enumerate(max_difficult):
-            if (max_difficult[value][0] == 2 and max_difficult[value][1] == difficult) or P < Pmin:
-                route += f"|{value}| "
-            elif max_difficult[value][0] == 1 and max_difficult[value][1] == difficult:
-                route += f"|{value}|"
-    else:
-        route = "Balanced"
+    route = ""
+    difficult_practice = {}
+    for i, value in enumerate(data_manager.activities):
+        if d[i] >= 4 and data_manager.survey_data[value][0] == 2:
+            difficult_practice[value] = (data_manager.survey_data[value][0], d[i])
+            
+    difficult_theory = {}
+    for i, value in enumerate(data_manager.activities):
+        if d[i] >= 4 and data_manager.survey_data[value][0] == 1:
+            difficult_theory[value] = (data_manager.survey_data[value][0], d[i])
+    
+    levels = []
+    if P < Pmin and len(difficult_practice) > 0:
+        levels.append(1)
+    if P >= Pmin and len(difficult_practice) > 0:
+        levels.append(2)
+    if len(difficult_theory) > 0:
+        levels.append(3)
+    if len(difficult_practice) <= 0 and len(difficult_theory) <= 0:
+        if P < Pmin:
+            levels.append((4, 1))
+        elif P >= Pmin:
+            levels.append((4, 2))
+            
+    for i in levels:
+        lst_activities = []
+        if i == 1:
+            for name, values in difficult_practice.items():
+                lst_activities.append(f"{name}({values[1]})")
+            activities = ",".join(lst_activities)
+            route += f"CRITICAL PRIORITY: Focus intensively on {activities}\n"
+        elif i == 2:
+            for name, values in difficult_practice.items():
+                lst_activities.append(f"{name}({values[1]})")
+            activities = ",".join(lst_activities)
+            route += f"FOCUS ON PRACTICE: Improvement {activities}\n"
+        elif i == 3:
+            for name, values in difficult_theory.items():
+                lst_activities.append(f"{name}({values[1]})")
+            activities = ",".join(lst_activities)
+            route += f"REINFORCE THEORY: Strengthens {activities}\n"
+        elif type(i) == tuple:
+            if i[0] == 4 and i[1] == 1:
+                route += "INCREASE GENERAL PRACTICE: Your practice ratio is low, but you don't have any specific weaknesses. Allocate more time to practice activities.\n"
+            elif i[0] == 4 and i[1] == 2:
+                route += "BALANCED PATH: Your difficulties are spread out. Maintain consistency and focus on gradually improving all areas.\n"
 
     # Determine secondary action
     if state == "Appropriate":
         action = "Maintain current pace"
     elif state == "In adjustment":
         if hours_day and not fulfills_practice:
-            action = "Increase practice (exercises and projects)"
+            action = "Increase practice"
         else:
             action = "Increase daily study hours"
     else:

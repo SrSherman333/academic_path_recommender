@@ -78,29 +78,29 @@ class ResultsWindow(ctk.CTkToplevel):
         )
         frame2_title2.grid(row=len(self.data_manager.activities)+2, column=0, pady=5)
         
-        frame3_title2 = ctk.CTkLabel(
+        frame2_title3 = ctk.CTkLabel(
             self.frame2, text="Day with the least study:", bg_color="#72577c", fg_color="#562155", 
             text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
         )
-        frame3_title2.grid(row=len(self.data_manager.activities)+3, column=0, pady=5)
+        frame2_title3.grid(row=len(self.data_manager.activities)+3, column=0, pady=5)
         
-        frame3_title2 = ctk.CTkLabel(
+        frame2_title4 = ctk.CTkLabel(
             self.frame2, text="Dominant activity:", bg_color="#72577c", fg_color="#562155", 
             text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
         )
-        frame3_title2.grid(row=len(self.data_manager.activities)+4, column=0,pady=5)
+        frame2_title4.grid(row=len(self.data_manager.activities)+4, column=0,pady=5)
         
         # Section 2 -------------------------------------
         section2 = ctk.CTkLabel(
             self, text="Recomendations:", 
             font=("Arial", 14, "bold"), text_color="#72577c", wraplength=500, 
             bg_color="#a9c2c9")
-        section2.place(relx=0.1, rely=0.5, anchor=tk.CENTER)
+        section2.place(relx=0.1, rely=0.52, anchor=tk.CENTER)
         
         self.frame3 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9", width=375
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=750
         )
-        self.frame3.place(relx=0.25, rely=0.7, anchor=tk.CENTER)
+        self.frame3.place(relx=0.5, rely=0.72, anchor=tk.CENTER)
         
         frame3_title1 = ctk.CTkLabel(
             self.frame3, text="Suggested route:", bg_color="#72577c", fg_color="#562155", 
@@ -119,6 +119,24 @@ class ResultsWindow(ctk.CTkToplevel):
             text_color="#c5f7f0", corner_radius=60, font=("Arial", 14, "bold")
         )
         frame3_title3.grid(row=2, column=0, pady=5)
+        
+        btn_return = ctk.CTkButton(
+            self, text="Return to Menu", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
+            command=self.destroy, border_color="#8e8ca3", border_width=2)
+        btn_return.place(relx=0.1, rely=0.95, anchor=tk.CENTER)
+        
+        btn_charts = ctk.CTkButton(
+            self, text="Generate Charts", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
+            border_color="#8e8ca3", border_width=2)
+        btn_charts.place(relx=0.7, rely=0.95, anchor=tk.CENTER)
+        
+        btn_report = ctk.CTkButton(
+            self, text="Generate Report", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
+            border_color="#8e8ca3", border_width=2)
+        btn_report.place(relx=0.9, rely=0.95, anchor=tk.CENTER)
         
         self.analyze_data()
         
@@ -195,18 +213,18 @@ class ResultsWindow(ctk.CTkToplevel):
         
         route_result = ctk.CTkLabel(
             self.frame3, text=route , bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=220
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=620
         )
         route_result.grid(row=0, column=1, pady=5, padx=10)
         
         state_result = ctk.CTkLabel(
             self.frame3, text=state , bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=220
+            text_color="#c5f7f0", font=("Arial", 14, "bold")
         )
         state_result.grid(row=1, column=1, pady=5, padx=10)
         
         action_result = ctk.CTkLabel(
             self.frame3, text=action , bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=220
+            text_color="#c5f7f0", font=("Arial", 14, "bold")
         )
         action_result.grid(row=2, column=1, pady=5, padx=10)
