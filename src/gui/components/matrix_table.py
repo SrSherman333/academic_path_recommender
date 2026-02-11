@@ -107,6 +107,8 @@ class MatrixTable(ctk.CTkFrame):
         """
         day_entries_past = []
         activities_past = []
+        self.data_manager.survey_data.clear()
+        
         for i in self.entries:
             temp = []
             for j in i:
@@ -122,6 +124,11 @@ class MatrixTable(ctk.CTkFrame):
                 
         for i, value in enumerate(activities_past):
             self.data_manager.update_activities(i, value)
+            self.data_manager.survey_data[value] = (0, 0)
+            
+        self.data_manager.survey_data["h"] = 0.0
+        self.data_manager.survey_data["Hmin"] = 0.0
+        self.data_manager.survey_data["Pmin"] = 0.0
             
     def redraw_table(self):
         """
@@ -207,10 +214,10 @@ class MatrixTable(ctk.CTkFrame):
             
             for i, value in enumerate(self.cb_columns._values):
                 if self.cb_columns.get() == value:
+                    del self.data_manager.survey_data[self.activities[i].get()]
                     for j, value in enumerate(self.data_manager.weekly_log):
                         self.data_manager.weekly_log[j].pop(i)
                     self.data_manager.activities.pop(i)
-                    self.data_manager.survey_data.pop(f"Activity {self.count_survey}", None)
                     list_columns = []
                     for i, value in enumerate(self.data_manager.activities):
                         list_columns.append(f"Column {i+1}")

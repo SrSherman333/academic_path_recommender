@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import numpy as np
+from src.core.data_manager import data_manager
 
 def create_graphics(total_days, Hmin, totals_act, P, Pmin):
     print("Generating visualizations...")
@@ -35,9 +37,10 @@ def create_graphics(total_days, Hmin, totals_act, P, Pmin):
     # 2. BAR CHART: HOURS BY ACTIVITY
     plt.figure(figsize=(10, 5))
 
-    activities_names = ["Reading/Theory", "Exercises/Practice",
-                        "Project/Programming", "Review/Assessment"]
-    colors = ['skyblue', 'lightgreen', 'lightcoral', 'gold']
+    activities_names = data_manager.activities
+    num_activities = len(activities_names)
+    
+    colors = plt.cm.tab10(np.linspace(0, 1, num_activities))
 
     bars = plt.bar(activities_names, totals_act, color=colors, edgecolor='black')
 
