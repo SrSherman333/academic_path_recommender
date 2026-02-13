@@ -85,7 +85,6 @@ class SurveyForm2(ctk.CTkFrame):
                 command=slider_event
             )
             sliders.grid(row=i+2, column=1)
-            sliders.set(1)
             self.widgets_sliders.append(sliders)
             
             levels = ctk.CTkLabel(
@@ -95,13 +94,17 @@ class SurveyForm2(ctk.CTkFrame):
             levels.grid(row=i+2, column=2, pady=5, padx=5)
             widgets_levels.append(levels)
             
+        for i, value in enumerate(self.data_manager.activities):
+            self.widgets_sliders[i].set(self.data_manager.survey_data[value][1])
+            widgets_levels[i].configure(text=self.data_manager.survey_data[value][1])
+            
         order2 = ctk.CTkLabel(
             self, text="2. Available hours per day (e.g., 4.5):", 
             bg_color="#72577c", fg_color="#72577c", text_color="#c5f7f0", font=("Arial", 14, "bold")
             )
         order2.grid(row=(len(widgets_levels)+3)-1, column=0, pady=5, padx=5)
         
-        self.hours_var = ctk.StringVar(value="")
+        self.hours_var = ctk.StringVar(value=self.data_manager.survey_data["h"])
         
         self.hours_entrie = ctk.CTkEntry(self, width=50, placeholder_text="0.0", textvariable=self.hours_var)
         self.hours_entrie.grid(row=(len(widgets_levels)+3)-1, column=1, pady=5, padx=5)
@@ -118,7 +121,7 @@ class SurveyForm2(ctk.CTkFrame):
             )
         order3.grid(row=(len(widgets_levels)+4)-1, column=0, pady=5, padx=5)
         
-        self.Hmin_var = ctk.StringVar(value="")
+        self.Hmin_var = ctk.StringVar(value=self.data_manager.survey_data["Hmin"])
         
         self.Hmin_entrie = ctk.CTkEntry(self, width=50, placeholder_text="0.0", textvariable=self.Hmin_var)
         self.Hmin_entrie.grid(row=(len(widgets_levels)+4)-1, column=1, pady=5, padx=5)
@@ -129,7 +132,7 @@ class SurveyForm2(ctk.CTkFrame):
             )
         order4.grid(row=(len(widgets_levels)+5)-1, column=0, pady=5, padx=5)
         
-        self.Pmin_var = ctk.StringVar(value="")
+        self.Pmin_var = ctk.StringVar(value=self.data_manager.survey_data["Pmin"])
         
         self.Pmin_entrie = ctk.CTkEntry(self, width=50, placeholder_text="0.0", textvariable=self.Pmin_var)
         self.Pmin_entrie.grid(row=(len(widgets_levels)+5)-1, column=1, pady=5, padx=5)

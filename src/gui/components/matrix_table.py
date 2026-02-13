@@ -124,7 +124,7 @@ class MatrixTable(ctk.CTkFrame):
                 
         for i, value in enumerate(activities_past):
             self.data_manager.update_activities(i, value)
-            self.data_manager.survey_data[value] = (0, 0)
+            self.data_manager.survey_data[value] = (1, 1)
             
         self.data_manager.survey_data["h"] = 0.0
         self.data_manager.survey_data["Hmin"] = 0.0

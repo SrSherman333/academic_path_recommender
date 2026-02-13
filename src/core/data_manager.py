@@ -22,10 +22,10 @@ class StudyDataManager:
                     "Project/Programming", "Review/Assessment"]
         
         self.survey_data = { # Results of the survey
-            "Reading/Theory":(1, 0),
-            "Exercises/Practice":(2, 0),
-            "Project/Programming":(2, 0),
-            "Review/Assessment":(1, 0),
+            "Reading/Theory":(1, 1),
+            "Exercises/Practice":(2, 1),
+            "Project/Programming":(2, 1),
+            "Review/Assessment":(1, 1),
             "h":0.0,
             "Hmin":0.0,
             "Pmin":0.0

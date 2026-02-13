@@ -80,17 +80,17 @@ def recommend_route(h, d, P, Hmin, Pmin):
         if i == 1:
             for name, values in difficult_practice.items():
                 lst_activities.append(f"{name}({values[1]})")
-            activities = ",".join(lst_activities)
+            activities = ", ".join(lst_activities)
             route += f"CRITICAL PRIORITY: Focus intensively on {activities}\n"
         elif i == 2:
             for name, values in difficult_practice.items():
                 lst_activities.append(f"{name}({values[1]})")
-            activities = ",".join(lst_activities)
+            activities = ", ".join(lst_activities)
             route += f"FOCUS ON PRACTICE: Improvement {activities}\n"
         elif i == 3:
             for name, values in difficult_theory.items():
                 lst_activities.append(f"{name}({values[1]})")
-            activities = ",".join(lst_activities)
+            activities = ", ".join(lst_activities)
             route += f"REINFORCE THEORY: Strengthens {activities}\n"
         elif type(i) == tuple:
             if i[0] == 4 and i[1] == 1:

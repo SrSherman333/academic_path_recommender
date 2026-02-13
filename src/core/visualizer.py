@@ -57,8 +57,9 @@ def create_graphics(total_days, Hmin, totals_act, P, Pmin):
                 bbox=dict(boxstyle="round,pad=0.3", facecolor="yellow", alpha=0.5))
 
     plt.title('WEEKLY DISTRIBUTION BY ACTIVITY', fontsize=14, fontweight='bold')
-    plt.xlabel('Activity', fontsize=12)
+    plt.xlabel('Activities', fontsize=12)
     plt.ylabel('Accumulated hours', fontsize=12)
+    plt.xticks(rotation=45, ha='right')
     plt.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
     plt.savefig('bar_chart.png', dpi=150)

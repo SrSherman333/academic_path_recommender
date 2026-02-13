@@ -27,8 +27,8 @@ class EditorWindow(ctk.CTkToplevel):
         """
         frame = ctk.CTkScrollableFrame(
             self, bg_color="#a9c2c9", fg_color="#72577c", scrollbar_fg_color="#562155", 
-            width=750, height=380, orientation="horizontal", scrollbar_button_hover_color="#8e8ca3",
-            scrollbar_button_color="#c5f7f0")
+            width=750, height=380, orientation="horizontal", scrollbar_button_hover_color="#8e8ca3"
+            )
         frame.place(relx=0.5, rely=0.55, anchor=tk.CENTER) # The frame that will contain the matrix
         
         title = ctk.CTkLabel( # Label for the title

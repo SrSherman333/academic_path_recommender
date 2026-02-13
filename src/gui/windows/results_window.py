@@ -31,7 +31,8 @@ class ResultsWindow(ctk.CTkToplevel):
         
         # First frame
         self.frame1 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9", width=250
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=250,  scrollbar_fg_color="#562155",
+            scrollbar_button_hover_color="#8e8ca3", scrollbar_button_color="#c5f7f0"
         )
         self.frame1.place(relx=0.2, rely=0.3, anchor=tk.CENTER)
         
@@ -56,7 +57,8 @@ class ResultsWindow(ctk.CTkToplevel):
         
         # Second frame
         self.frame2 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9", width=500
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=500, scrollbar_fg_color="#562155",
+            scrollbar_button_hover_color="#8e8ca3", scrollbar_button_color="#c5f7f0"
         )
         self.frame2.place(relx=0.66, rely=0.3, anchor=tk.CENTER)
         
@@ -99,7 +101,8 @@ class ResultsWindow(ctk.CTkToplevel):
         section2.place(relx=0.1, rely=0.52, anchor=tk.CENTER)
         
         self.frame3 = ctk.CTkScrollableFrame(
-            self, fg_color="#72577c", bg_color="#a9c2c9", width=750
+            self, fg_color="#72577c", bg_color="#a9c2c9", width=750, scrollbar_fg_color="#562155",
+            scrollbar_button_hover_color="#8e8ca3", scrollbar_button_color="#c5f7f0"
         )
         self.frame3.place(relx=0.5, rely=0.72, anchor=tk.CENTER)
         
@@ -145,7 +148,7 @@ class ResultsWindow(ctk.CTkToplevel):
         # Data from the first frame
         self.total_days = []
         total_weekly = 0
-        weakest_day = 0
+        weakest_day = []
         min_hours = float("inf")
         
         for i, value in enumerate(self.data_manager.weekly_log):
@@ -155,7 +158,10 @@ class ResultsWindow(ctk.CTkToplevel):
             
             if  total_of_day < min_hours:
                 min_hours = total_of_day
-                weakest_day = i+1
+        
+        for i, value in enumerate(self.total_days):
+            if value == min_hours:
+                weakest_day.append(i+1)
                 
         for i, value in enumerate(self.total_days):
             hours_days = ctk.CTkLabel(
@@ -166,7 +172,7 @@ class ResultsWindow(ctk.CTkToplevel):
             
         weekly_hours = ctk.CTkLabel(
             self.frame1, text=f"{total_weekly:.2f} hours", bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14, "bold")
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), padx=10
         )
         weekly_hours.grid(row=9, column=1, pady=5)
         
@@ -189,18 +195,39 @@ class ResultsWindow(ctk.CTkToplevel):
         result_P.grid(row=len(self.data_manager.activities)+2, column=1, pady=5)
         
         weak_day = ctk.CTkLabel(
-            self.frame2, text=f"Day {weakest_day}", bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14, "bold")
+            self.frame2, text="", bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=300
         )
-        weak_day.grid(row=len(self.data_manager.activities)+3, column=1, pady=5)
+        weak_day.grid(row=len(self.data_manager.activities)+3, column=1, pady=5, padx=10)
         
-        dominant_activity = data_manager.activities[self.totals_act.index(max(self.totals_act))]
+        if len(weakest_day) == 1:
+            weak_day.configure(text=f"Day {weakest_day[0]}")
+        elif len(weakest_day) == 7:
+            weak_day.configure(text="They dedicate the same amount of time to each day")
+        else:
+            days = ", ".join(map(str, weakest_day))
+            weak_day.configure(text=f"Days {days} (tied)")
+        
+        dominant_activity = []
+        
+        dominant_value = max(self.totals_act)
+        for i, value in enumerate(self.totals_act):
+            if dominant_value == value:
+                dominant_activity.append(data_manager.activities[i])
         
         dom_activitiy = ctk.CTkLabel(
-            self.frame2, text=dominant_activity , bg_color="#72577c", fg_color="#72577c", 
-            text_color="#c5f7f0", font=("Arial", 14, "bold")
+            self.frame2, text="" , bg_color="#72577c", fg_color="#72577c", 
+            text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=280
         )
-        dom_activitiy.grid(row=len(self.data_manager.activities)+4, column=1, pady=5)
+        dom_activitiy.grid(row=len(self.data_manager.activities)+4, column=1, pady=5, padx=10)
+        
+        if len(dominant_activity) == 1:
+            dom_activitiy.configure(text=dominant_activity[0])
+        elif len(dominant_activity) == len(self.totals_act):
+            dom_activitiy.configure(text="All activities have the same level of dedication")
+        else:
+            num_activities = ", ".join(dominant_activity)
+            dom_activitiy.configure(text=num_activities)
         
         # Data from the third frame
         h = data_manager.survey_data["h"]

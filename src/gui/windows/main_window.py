@@ -80,7 +80,15 @@ class MainWindow(ctk.CTk):
             self, text="Exit", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
             command=self.destroy, border_color="#8e8ca3", border_width=2)
-        btn_exit.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+        btn_exit.place(relx=0.35, rely=0.9, anchor=tk.CENTER)
+        
+        btn_reset = ctk.CTkButton( # Button to close the app
+            self, text="Reset", bg_color="#a9c2c9", fg_color="transparent",
+            hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
+            border_color="#8e8ca3", border_width=2, text_color_disabled="#8e8ca3")
+        btn_reset.place(relx=0.65, rely=0.9, anchor=tk.CENTER)
+        
+        self.comprobation()
         
     def comprobation(self):
         total_matrix = []
@@ -89,17 +97,13 @@ class MainWindow(ctk.CTk):
         
         if sum(total_matrix) > 0:
             self.step1 = True
-            print(f"Paso 1: {self.step1}")
         else:
             self.step1 = False
-            print(f"Paso 1: {self.step1}")
             
         if self.data_manager.survey_data["h"] > 0:
             self.step2 = True
-            print(f"Paso 2: {self.step2}")
         else:
             self.step2 = False
-            print(f"Paso 2: {self.step2}")
             
         if self.step1 and self.step2:
             self.btn_results.configure(state="normal", fg_color="#c5f7f0", 
