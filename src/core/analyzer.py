@@ -18,7 +18,7 @@ def totals_activity(matrix):
     return totals
 
 def practical_proportion(totals):
-    # Calculate the proportion of practice hours (Exercises + Project)
+    # Calculate the proportion of practice hours
     indexs = []
     for i, value in enumerate(data_manager.activities):
         if data_manager.survey_data[value][0] == 2:
