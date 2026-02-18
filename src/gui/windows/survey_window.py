@@ -128,7 +128,9 @@ class SurveyWindow(ctk.CTkToplevel):
             self.data_manager.survey_data["Hmin"] = Hmin
             self.data_manager.survey_data["Pmin"] = Pmin
             
-        self.data_manager.save_to_file()
+            self.data_manager.save_to_file()
+        
+            self.survey_form2.errors.configure(text="Data saved")
         
     def on_close(self):
         self.parent.comprobation()

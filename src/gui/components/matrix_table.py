@@ -201,8 +201,6 @@ class MatrixTable(ctk.CTkFrame):
             self.cb_columns.configure(values=list_columns)
             
             self.redraw_table()
-        else:
-            print(False)
         
     def delete_columns(self):
         """
@@ -225,8 +223,6 @@ class MatrixTable(ctk.CTkFrame):
                     
             self.count_survey -= 1
             self.redraw_table()
-        else:
-            print(False)
             
     def save_values(self):
         """
@@ -237,8 +233,8 @@ class MatrixTable(ctk.CTkFrame):
             self.update_data_from_gui()
                 
             self.data_manager.save_to_file()
-        else:
-            print(False)
+            
+            self.callback("Data saved")
         
     def load_values(self):
         """
@@ -248,4 +244,4 @@ class MatrixTable(ctk.CTkFrame):
         if self.data_manager.load_from_file():
             self.redraw_table()
         else:
-            print(False)
+            self.callback("The file 'study_data.jso' does not exist")

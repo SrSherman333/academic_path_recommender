@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from src.core.analyzer import *
 from src.core.visualizer import create_graphics
+from src.core.reporter import generate_report
 
 class ResultsWindow(ctk.CTkToplevel):
     def __init__(self, parent):
@@ -139,7 +140,7 @@ class ResultsWindow(ctk.CTkToplevel):
         btn_report = ctk.CTkButton(
             self, text="Generate Report", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
-            border_color="#8e8ca3", border_width=2)
+            border_color="#8e8ca3", border_width=2, command=self.create_report)
         btn_report.place(relx=0.9, rely=0.95, anchor=tk.CENTER)
         
         self.analyze_data()
@@ -237,25 +238,28 @@ class ResultsWindow(ctk.CTkToplevel):
         self.Hmin = data_manager.survey_data["Hmin"]
         self.Pmin = data_manager.survey_data["Pmin"]
             
-        route, action, state = recommend_route(h, d, self.P, self.Hmin, self.Pmin)
+        self.route, self.action, self.state = recommend_route(h, d, self.P, self.Hmin, self.Pmin)
         
         route_result = ctk.CTkLabel(
-            self.frame3, text=route , bg_color="#72577c", fg_color="#72577c", 
+            self.frame3, text=self.route , bg_color="#72577c", fg_color="#72577c", 
             text_color="#c5f7f0", font=("Arial", 14, "bold"), wraplength=620
         )
         route_result.grid(row=0, column=1, pady=5, padx=10)
         
         state_result = ctk.CTkLabel(
-            self.frame3, text=state , bg_color="#72577c", fg_color="#72577c", 
+            self.frame3, text=self.state , bg_color="#72577c", fg_color="#72577c", 
             text_color="#c5f7f0", font=("Arial", 14, "bold")
         )
         state_result.grid(row=1, column=1, pady=5, padx=10)
         
         action_result = ctk.CTkLabel(
-            self.frame3, text=action , bg_color="#72577c", fg_color="#72577c", 
+            self.frame3, text=self.action , bg_color="#72577c", fg_color="#72577c", 
             text_color="#c5f7f0", font=("Arial", 14, "bold")
         )
         action_result.grid(row=2, column=1, pady=5, padx=10)
         
     def create_graphics(self):
         create_graphics(self.total_days, self.Hmin, self.totals_act, self.P, self.Pmin)
+        
+    def create_report(self):
+        generate_report(self.total_days, self.totals_act, self.P, self.route, self.action, self.state)

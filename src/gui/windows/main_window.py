@@ -73,7 +73,7 @@ class MainWindow(ctk.CTk):
         self.btn_results = ctk.CTkButton( # Button to open the window where the results, including the graphs, will be displayed
             self, text="3. View results", bg_color="#a9c2c9", fg_color="#8e8ca3",
             hover_color="#72577c", font=("Arial", 14, "bold"), text_color="white",
-            state="normal", command=self.open_results_window) # Disabled until the survey is completed
+            command=self.open_results_window) # Disabled until the survey is completed
         self.btn_results.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
         
         btn_exit = ctk.CTkButton( # Button to close the app
@@ -82,11 +82,12 @@ class MainWindow(ctk.CTk):
             command=self.destroy, border_color="#8e8ca3", border_width=2)
         btn_exit.place(relx=0.35, rely=0.9, anchor=tk.CENTER)
         
-        btn_reset = ctk.CTkButton( # Button to close the app
+        self.btn_reset = ctk.CTkButton( # Button to close the app
             self, text="Reset", bg_color="#a9c2c9", fg_color="transparent",
             hover_color="#8e8ca3", font=("Arial", 14, "bold"), text_color="#562155",
-            border_color="#8e8ca3", border_width=2, text_color_disabled="#8e8ca3")
-        btn_reset.place(relx=0.65, rely=0.9, anchor=tk.CENTER)
+            border_color="#8e8ca3", border_width=2, text_color_disabled="#8e8ca3",
+            command=self.reset_data)
+        self.btn_reset.place(relx=0.65, rely=0.9, anchor=tk.CENTER)
         
         self.comprobation()
         
@@ -108,8 +109,10 @@ class MainWindow(ctk.CTk):
         if self.step1 and self.step2:
             self.btn_results.configure(state="normal", fg_color="#c5f7f0", 
                                     hover_color="#a9c2c9", text_color="#562155")
+            self.btn_reset.configure(state="normal")
         else:
             self.btn_results.configure(state="disabled", fg_color="#8e8ca3", text_color="white")
+            self.btn_reset.configure(state="disabled")
         
     def open_editor_window(self):
         """
@@ -137,3 +140,29 @@ class MainWindow(ctk.CTk):
             self.results_window.grab_set()
         else:
             self.results_window.focus()
+            
+    def reset_data(self):
+        self.data_manager.weekly_log = [
+            [1.0, 1.0, 0.5, 0.5],
+            [0.8, 1.2, 0.7, 0.4],
+            [0.6, 1.4, 0.8, 0.5],
+            [0.5, 1.0, 1.2, 0.3],
+            [0.9, 1.3, 0.7, 0.6],
+            [0.7, 1.1, 0.9, 0.4],
+            [0.6, 1.0, 1.1, 0.5]
+        ]
+        
+        self.data_manager.activities = ["Reading/Theory", "Exercises/Practice", # Names of the activities
+                    "Project/Programming", "Review/Assessment"]
+        
+        self.data_manager.survey_data = { # Results of the survey
+            "Reading/Theory":(1, 1),
+            "Exercises/Practice":(2, 1),
+            "Project/Programming":(2, 1),
+            "Review/Assessment":(1, 1),
+            "h":0.0,
+            "Hmin":0.0,
+            "Pmin":0.0
+        }
+        
+        self.comprobation()
