@@ -47,7 +47,7 @@ def generate_report(total_days, totals_act, P, route, action, state):
             dominant_activity.append(data_manager.activities[i])
             
     if len(dominant_activity) == 1:
-        report += f"Dominant Activity: {dominant_activity}\n"
+        report += f"Dominant Activity: {dominant_activity[0]}\n"
     elif len(dominant_activity) == len(totals_act):
         report += "Dominant Activity: All activities have the same level of dedication\n"
     else:
