@@ -54,13 +54,19 @@ def recommend_route(h, d, P, Hmin, Pmin):
     route = ""
     difficult_practice = {}
     for i, value in enumerate(data_manager.activities):
-        if d[i] >= 4 and data_manager.survey_data[value][0] == 2:
-            difficult_practice[value] = (data_manager.survey_data[value][0], d[i])
+        try:
+            if d[i] >= 4 and data_manager.survey_data[value][0] == 2:
+                difficult_practice[value] = (data_manager.survey_data[value][0], d[i])
+        except IndexError:
+            pass
             
     difficult_theory = {}
     for i, value in enumerate(data_manager.activities):
-        if d[i] >= 4 and data_manager.survey_data[value][0] == 1:
-            difficult_theory[value] = (data_manager.survey_data[value][0], d[i])
+        try:
+            if d[i] >= 4 and data_manager.survey_data[value][0] == 1:
+                difficult_theory[value] = (data_manager.survey_data[value][0], d[i])
+        except IndexError:
+            pass
     
     levels = []
     if P < Pmin and len(difficult_practice) > 0:

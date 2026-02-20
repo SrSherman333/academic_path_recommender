@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from core.data_manager import WEEKLY_LOG
-from core.analyzer import total_day, totals_activity, practical_proportion, recommend_route
-from core.reporter import generate_report
-from core.visualizer import create_graphics
+from src.core.data_manager import data_manager
+from src.core.analyzer import total_day, totals_activity, practical_proportion, recommend_route
+from src.core.reporter import generate_report
+from src.core.visualizer import create_graphics
 
 def main():
     print("="*60)
@@ -88,7 +88,7 @@ def main():
     weakest_day = 0
     min_hours = float('inf')
 
-    for i, day in enumerate(WEEKLY_LOG):
+    for i, day in enumerate(data_manager.weekly_log):
         total_of_the_day = total_day(day)
         total_days.append(total_of_the_day)
         total_weekly += total_of_the_day
@@ -99,13 +99,18 @@ def main():
             weakest_day = i + 1
 
     # Calculate totals by activity
-    totals_act = totals_activity(WEEKLY_LOG)
+    totals_act = totals_activity(data_manager.weekly_log)
 
     # Calculate practice ratio
     P = practical_proportion(totals_act)
 
     # Apply rules
-    route, action, state = recommend_route(h, pd, md, r, P, Hmin, Pmin)
+    d = []
+    d.append(r)
+    d.append(md)
+    d.append(pd)
+    
+    route, action, state = recommend_route(h, d, P, Hmin, Pmin)
 
     # Generate report
     report = generate_report(total_days, totals_act, P, route, action, state)
@@ -115,17 +120,20 @@ def main():
     graphic = input("Do you want to generate the graphs? (yes/no): ")
     if graphic == "yes" or graphic == "Yes":
         create_graphics(total_days, Hmin, totals_act, P, Pmin)
+        print("\n" + "="*60)
+        print("PROCESS COMPLETED SUCCESSFULLY")
+        print("="*60)
+        print("\nReview the generated files:")
+        print("1. recommendation_report.txt")
+        print("2. line_graph.png")
+        print("3. bar_chart.png")
+        print("\n¡Thank you for using the referral system!")
     else:
         print("Canceling graphics generation")
-
-    print("\n" + "="*60)
-    print("PROCESS COMPLETED SUCCESSFULLY")
-    print("="*60)
-    print("\nReview the generated files:")
-    print("1. recommendation_report.txt")
-    print("2. line_graph.png")
-    print("3. bar_chart.png")
-    print("\n¡Thank you for using the referral system!")
+        print("\n" + "="*60)
+        print("PROCESS COMPLETED SUCCESSFULLY")
+        print("="*60)
+        print("\n¡Thank you for using the referral system!")
 
 if __name__ == "__main__":
     main()
